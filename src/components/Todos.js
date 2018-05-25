@@ -1,31 +1,23 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { toggleTodo , deleteTodo } from '../actions/todoActions'
 
 class Todos extends Component {
-  state = {
-    todos: [
-      {
-        id: 0,
-        task: 'Test this Todo Page',
-        completed: false
-      },
-      {
-        id: 1,
-        task: 'Learn Redux',
-        completed: false
-      },
-      {
-        id: 2,
-        task: 'Learn React',
-        completed: true
-      }
-    ]
-  }
-  render () {
+
+  render() {
     return (
       <div>
         <ul>
-          {this.state.todos.map(todo => (
-            <li key={todo.id}>{todo.task}: {todo.completed.toString()}</li>
+        {this.props.todos.map(todo => (
+          <li
+            key={todo.id}
+            onClick={() => this.props.toggleTodo(todo.id)} //Why do we wrap this in an arrow function?
+          >
+          
+            {todo.task}: {todo.completed.toString()}
+            <button>Edit</button>
+            <button onClick={() => this.props.deleteTodo(todo.id)}>Delete</button>
+          </li>
           ))}
         </ul>
       </div>
@@ -33,4 +25,10 @@ class Todos extends Component {
   }
 }
 
-export default Todos
+const mapStateToProps = (state) => {
+  return {
+    todos: state.todos
+  }
+}
+
+export default connect(mapStateToProps, { toggleTodo, deleteTodo })(Todos)
